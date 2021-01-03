@@ -30,10 +30,14 @@ RTC_DS3231 rtc;
 #define lightSensor A0 
 #define soundSensor A1
 File myFile;
+String dayArray = new String[2];
 /*********************************************************/
 void save_values(int light, int sound) {
 DateTime rightNow = rtc.now();
-myFile = SD.open("values2.csv", FILE_WRITE);
+String currentDay = String(rightNow.month()) + "_" + String(rightNow.day()) + "_" + String(rightNow.year()); //variable for the day (month_day_year_)
+dayArray[1] = currentDay;
+if (!dayArray[0].equals(dayArray[1])) {dayArray[0] = currentDay}
+myFile = SD.open(dayArray[0], FILE_WRITE); //change the file and file name when the day changes
 myFile.print(rightNow.hour(), DEC);
 myFile.print(':');
 myFile.print(rightNow.minute(), DEC);
@@ -78,7 +82,7 @@ if (!rtc.begin()) { //(!rtc.initialized()) {
     
 myFile = SD.open("values.csv", FILE_WRITE);
 DateTime rightNow = rtc.now();
-myFile.print(rightNow.year(), DEC);
+myFile.print(rightNow.year(), DEC); 
 myFile.print('/');
 myFile.print(rightNow.month(), DEC);
 myFile.print('/');
